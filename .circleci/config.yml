@@ -14,23 +14,28 @@ jobs:
       - run: npm run lint
   test:
     docker: 
-      - image: cimg/node:16.16.0
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
           keys:
             - 'npm-packages'
+      - run: npm i
       - run: npm run test
 
   analyze:
     docker: 
-      - image: cimg/node:16.16.0
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
           keys: 
             - "npm-packages"
+      - run: npm i
       - run: npm audit
+      - run: 
+          when: on_fail
+          command: npm audit fix
 
 workflows:
   default:
